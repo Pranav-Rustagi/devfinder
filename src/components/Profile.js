@@ -29,15 +29,15 @@ const Profile = (props) => {
                         </div>
                     </div>
 
-                    <p className="bio">
+                    <p className="bio lessOpaque">
                         <br/>
-                        {dataObj.bio}
+                        {dataObj.bio || "Bio not available"}
                     </p>
                 </div>
             </div>
-            <p className="bio">
+            <p className="bio lessOpaque">
                 <br/>
-                {dataObj.bio}
+                {dataObj.bio || "Bio not available"}
             </p>
             <br/>
             <div className="stats">
@@ -60,15 +60,15 @@ const Profile = (props) => {
             </div>
             <br/>
             <div className="details">
-                <div className="field">
+                <div className={"field" + (!!dataObj.company ? " lessOpaque" : "")} title="Company">
                     <OrganizationIcon size={20} />
                     <span className="field-value">{dataObj.company || "Not Available"}</span>
                 </div>
-                <div className="field">
+                <div className={"field" + (!!dataObj.location ? " lessOpaque" : "")} title="Location">
                     <LocationIcon size={20} />
                     <span className="field-value">{dataObj.location || "Not Available"}</span>
                 </div>
-                <div className="field">
+                <div className={"field" + (!!dataObj.blog ? " lessOpaque" : "")} title="Website">
                     <LinkIcon size={20} />
                     <span className="field-value">
                         {
@@ -78,7 +78,7 @@ const Profile = (props) => {
                         }
                     </span>
                 </div>
-                <div className="field">
+                <div className={"field" + (!!dataObj.twitter_username ? " lessOpaque" : "")} title="Twitter username">
                     <span className="twitter-icon"></span>
                     <span className="field-value">{dataObj.twitter_username || "Not Available"}</span>
                 </div>

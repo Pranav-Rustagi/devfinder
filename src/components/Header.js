@@ -1,3 +1,5 @@
+import { MoonIcon, SunIcon } from "@primer/octicons-react";
+
 const Header = (props) => {
 
     const getOtherTheme = () => props.theme === "light" ? "dark" : "light";
@@ -14,7 +16,11 @@ const Header = (props) => {
                 onClick={toggleTheme}
             >
                 <span className="theme-name">{getOtherTheme().toUpperCase()}</span>
-                <span className="theme-icon"></span>
+                {
+                    props.theme === "light" ?
+                    <MoonIcon size={16} /> :
+                    <SunIcon size={16} />
+                }
             </div>
         </div>
     );

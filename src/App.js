@@ -1,15 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import isEmptyObj from "./helpers/emptyObj";
 import Header from "./components/Header";
 import SearchBar from "./components/SearchBar";
 import Profile from "./components/Profile";
 import axios from "axios";
 
-
-const isEmptyObj = obj => {
-  for(let i in obj)
-    return false;
-  return true;
-}
 
 const App = () => {
   const [theme, setTheme] = useState("dark");
@@ -21,34 +17,57 @@ const App = () => {
     try {
       const response = await axios.get(`https://api.github.com/users/${query}`);
       setData(response.data);
+      toast.success("User found", {id: "success"});
     }
     catch(e) {
-      setData({});
+      toast.error("User does not exist!", {id: "error"});
       console.log(e);
     }
   }, []);
 
 
+
   useEffect(() => {
-    if(makeSearch) {
-      fetchData(searchQuery);
-      setMakeSearch(false);
+    console.log(data);
+    async function search () {
+      if(makeSearch) {
+        const toastId = toast.loading("Searching user...", {id: "loading"});
+        await fetchData(searchQuery);
+        toast.dismiss(toastId);
+        setMakeSearch(false);
+      }
     }
-  }, [searchQuery, makeSearch, fetchData]);
+    search();
+  }, [searchQuery, makeSearch, data, fetchData]);
+
+
 
   return (
-    <div className="container" data-theme={theme}>
-      <Header theme={theme} setTheme={setTheme} />
-      <SearchBar
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery} 
-        setMakeSearch={setMakeSearch}
+    <div>
+      <div className="container" data-theme={theme}>
+        <Header theme={theme} setTheme={setTheme} />
+        <SearchBar
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery} 
+          setMakeSearch={setMakeSearch}
+          data={data}
+        />
+        { 
+          !isEmptyObj(data) ?
+          <Profile data={data} /> : 
+          null 
+        }
+      </div>
+      <Toaster
+        position="bottom-center"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: theme === "light" ? '#363636' : "#fff",
+            color: theme === "light" ? '#fff' : "#363636"
+          }
+        }}
       />
-      { 
-        !isEmptyObj(data) ?
-        <Profile data={data} /> : 
-        null 
-      }
     </div>
   );
 }
